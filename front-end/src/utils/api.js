@@ -34,6 +34,7 @@ async function fetchJson(url, options, onCancel) {
     const response = await fetch(url, options);
 
     if (response.status === 204) {
+    
       return null;
     }
 
@@ -67,3 +68,4 @@ export async function listReservations(params, signal) {
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
+
