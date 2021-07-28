@@ -3,7 +3,8 @@ import { useHistory } from "react-router"
 import axios from "axios";
 import { next } from "../utils/date-time";
 import { formatNumber, validateReservation } from "../utils/reservationFormValidation"
-import ErrorAlert  from "../layout/ErrorAlert"
+import ErrorAlert  from "../layout/ErrorAlert";
+import { postReservation } from "../utils/api";
 
 
 
@@ -19,25 +20,25 @@ export default function NewReservation ({date}) {
        last_name: "last name",
        mobile_number: "555-555-5555",
        reservation_date: date,
-       reservation_time: time,
+       reservation_time: "10:30",
        people: 1
    }
    const [formData, setFormData] = useState({ ...initialFormState });
    const [reservationsError, setReservationsError] = useState(null);
 
-   useEffect(()=> {
-        if(didMount.current){
-            if(reservationsError === null){
-                axios.post('http://localhost:5000/reservations/new', formData)
-                .then(response => {
-                    console.log(response.data);
-                });
-                history.push(`/dashboard/${formData.reservation_date}`)
-            }
-        }else{
-            didMount.current = true;
-        }
-   }, [reservationsError])
+//    useEffect(()=> {
+//         if(didMount.current){
+//             if(reservationsError === null){
+//                 axios.post('http://localhost:5000/reservations/new', formData)
+//                 .then(response => {
+//                     console.log(response.data);
+//                 });
+//                 history.push(`/dashboard/${formData.reservation_date}`)
+//             }
+//         }else{
+//             didMount.current = true;
+//         }
+//    }, [reservationsError])
 
    const handleChange = ({ target }) => {
        let value = target.value;
@@ -56,7 +57,26 @@ export default function NewReservation ({date}) {
 
    const handleSubmit = (event) => {
     event.preventDefault();
-    setReservationsError(validateReservation(formData));
+    //setReservationsError(validateReservation(formData));
+    // axios.post('http://localhost:5000/reservations/new', formData)
+    //             .then(response => {
+    //                 history.push(`/dashboard/${formData.reservation_date}`)
+    //             }).catch((error)=>{
+    //                 console.log("Error",error);
+    //                 setReservationsError(error)});
+    postReservation(formData).then(response => {
+                    history.push(`/dashboard/${formData.reservation_date}`)
+                }).catch((error)=>{
+                    console.log("Error",error);
+                    setReservationsError(error)});
+    // const requestOptions = {
+    //     method: 'POST',
+    //     headers: new Headers(),
+    //     body: formData
+    // };
+    // fetch('', requestOptions)
+    //     .then(response => response.json())
+    //     .then(data => this.setState({ postId: data.id }));
   };
     return (
         <div>
