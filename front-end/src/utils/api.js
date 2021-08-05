@@ -68,8 +68,22 @@ export async function listReservations(params, signal) {
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal }, []);
+}
 export async function postReservation(reqBody, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/`);
   return await fetchJson(url, { method: 'POST', headers, signal, body: JSON.stringify({data: reqBody})}, [])
+}
+export async function postTable(reqBody, signal) {
+  console.log("post table called");
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { method: 'POST', headers, signal, body: JSON.stringify({data: reqBody})}, [])
+}
+export async function deleteTable(reqBody, signal) {
+  console.log("delete table called");
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { method: 'DELETE', headers, signal, body: JSON.stringify({data: reqBody})}, [])
 }
 
