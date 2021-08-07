@@ -10,40 +10,20 @@ import Table from "./Table"
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-export default function Tables() {
-  const [tables, setTables] = useState([]);
-  const [tableError, setTableError] = useState(null);
+export default function Tables({ tables, setTables, setReservations, tablesError}) {
   const history = useHistory();
 
-  useEffect(loadTables, []);
-  function delTable(table_id) {
-    const abortController = new AbortController();
-    setTableError(null);
-    deleteTable(table_id, abortController.signal)
-      .then(loadTables)
-      .catch(setTableError);
-    return () => abortController.abort();
-  }
-  function loadTables() {
-    console.log("loading tables");
-    const abortController = new AbortController();
-    setTableError(null);
-    listTables(abortController.signal)
-      .then(setTables)
-      .catch(setTableError);
-    return () => abortController.abort();
-  }
 
 
   return (
     <main>
-      <ErrorAlert error={tableError} />
+      <ErrorAlert error={tablesError} />
       <h1>Tables</h1>
       <div>
         <button onClick={()=>history.push("/tables/new")}>New Table</button>
       </div>
       <div>
-        {tables.map((table)=> <Table passedTable={table} delTable={delTable} />)}
+        {tables.map((table)=> <Table passedTable={table}/>)}
       </div>
     </main>
   );

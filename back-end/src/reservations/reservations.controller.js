@@ -47,10 +47,24 @@ async function create(req, res) {
   res.status(204).json({ data })
 }
 async function list(req, res) {
-  const reservation_date = req.query.date;
-  const data = await service.list(reservation_date);
+  
+  //if(req.query.date){
+    const reservation_date = req.query.date;
+    console.log(reservation_date);
+    const data = await service.list(reservation_date);
+ // }
+  // else if(req.query.id){
+  //   const reservation_id = req.query.id;
+  //   const data = await service.read(reservation_id);
+  // }
   res.json({ data });
 }
+
+// async function read(req, res) {
+//   const reservation_id = req.query.id;
+//   const data = await service.read(reservation_id);
+//   res.json({ data });
+// }
 
 module.exports = {
   list: asyncErrorBoundary(list),

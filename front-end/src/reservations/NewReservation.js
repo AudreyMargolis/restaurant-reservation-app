@@ -23,7 +23,7 @@ export default function NewReservation ({date}) {
        reservation_time: "10:30",
        people: 1
    }
-   const [formData, setFormData] = useState({ ...initialFormState });
+   const [formData, setFormData] = useState({});
    const [reservationsError, setReservationsError] = useState(null);
 
 
@@ -47,7 +47,7 @@ export default function NewReservation ({date}) {
     event.preventDefault();
     
     postReservation(formData).then(response => {
-                    history.push(`/dashboard/${formData.reservation_date}`)
+                    history.push(`/dashboard?date=${formData.reservation_date}`)
                 }).catch((error)=>{
                     console.log("Error",error);
                     setReservationsError(error)});

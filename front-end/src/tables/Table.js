@@ -5,7 +5,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 
 
 
-export default function Table({ passedTable, delTable }) {
+export default function Table({passedTable}) {
 const [table, setTable] = useState(passedTable);
 
 
@@ -15,7 +15,7 @@ const [table, setTable] = useState(passedTable);
       <h3>Capacity: {table.capacity}</h3>
       <h3>{table.taken ? "Occupied" : "Open"}</h3>
       <div>
-        <button onClick={()=>delTable(table.table_id)}>Clear Table</button>
+        {/* <button onClick={()=>delTable(table.table_id)}>Clear Table</button> */}
       </div>
     </main>
   );

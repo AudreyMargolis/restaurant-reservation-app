@@ -11,11 +11,13 @@ async function list(req, res) {
     res.json({ data });
 }
 async function destroy(req, res) {
-    const data = await service.create(req.body.data);
+    const {data: { table_id } ={}} = req.body;
+    const data = await service.destroy(table_id);
     res.status(200).json({ data })
 }
 async function removeReservation(req, res) {
-
+    const data = await service.removeReservation(req.body.data);
+    res.status(200).json({ data });
 }
 
 module.exports = {
