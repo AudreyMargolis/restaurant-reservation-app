@@ -52,7 +52,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/seat">
-        <Seating tables={tables} setTables={setTables} setReservations={setReservations} />
+        <Seating tables={tables} setTables={setTables} reservations={reservations} setReservations={setReservations} />
       </Route>
       <Route exact={true} path="/reservations/new">
         <NewReservation setReservations={setReservations} loadDashboard={loadDashboard} date={today()}/>

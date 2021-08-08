@@ -14,16 +14,17 @@ import { today, previous, next } from "../utils/date-time";
 function Dashboard({ date, reservations, setReservations, reservationsError, tables, setTables, tablesError }) {
  
   const history = useHistory();
-
+  
   return (
     <main>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date} </h4>
       </div>
+
       <div>
         <button onClick={()=> history.push(`/dashboard?date=${previous(date)}`)}>Previous Date</button>
         <button onClick={()=> history.push(`/dashboard?date=${today()}`)}>Today</button>
-        <button onClick={()=>history.push(`/dashboard?date=${next(date)}`)}>Next Date</button>
+        <button onClick={()=> history.push(`/dashboard?date=${next(date)}`)}>Next Date</button>
       </div>
       <ErrorAlert error={reservationsError} />
       <div>
