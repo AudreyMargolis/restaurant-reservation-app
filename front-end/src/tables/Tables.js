@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router"
-import { listTables, deleteTable } from "../utils/api";
+import React from "react";
+import { useHistory } from "react-router"
+import { finishTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import Table from "./Table"
 
@@ -10,10 +10,16 @@ import Table from "./Table"
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-export default function Tables({ tables, setTables, setReservations, tablesError}) {
+export default function Tables({loadDashboard, tables, tablesError}) {
   const history = useHistory();
-
-
+  function clearTable(table_id) {
+    const confirm = window.confirm("Is the party at this table finished?");
+      if(confirm) {
+        finishTable(table_id)
+        .then(loadDashboard)
+        .catch(console.log)
+      }
+  }
 
   return (
     <main>
@@ -23,7 +29,7 @@ export default function Tables({ tables, setTables, setReservations, tablesError
         <button onClick={()=>history.push("/tables/new")}>New Table</button>
       </div>
       <div>
-        {tables.map((table)=> <Table passedTable={table}/>)}
+        {tables.map((table)=> <Table table={table} clearTable={clearTable}/>)}
       </div>
     </main>
   );

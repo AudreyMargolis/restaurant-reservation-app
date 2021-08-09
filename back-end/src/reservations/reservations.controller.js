@@ -5,29 +5,41 @@ const service = require("./reservations.service");
  * List handler for reservation resources
  */
 function validateReservation (req, res, next) {
-  const {data: {first_name, last_name, mobile_number, reservation_date, reservation_time} ={}} = req.body;
-    let temp_reservation_time = reservation_time.replace(":","");
+  const {data: {first_name, last_name, mobile_number, reservation_date, reservation_time, people} ={}} = req.body;
+    
+    let temp_reservation_time = reservation_time && reservation_time.replace(":","");
+    let regExp = /[a-zA-Z]/g;
       console.log("Reservation Time", temp_reservation_time);
       if(!first_name || first_name === "first name" || first_name === "" || first_name.includes(" ")){
-        next({ status: 400, message: "Need a valid First Name!"})
+        next({ status: 400, message: "Need a valid (first_name) First Name!"})
       }
       else if(!last_name || last_name === "last name" || last_name === ""){
-        next({ status: 400, message: "Need a valid Last Name!"})
+        next({ status: 400, message: "Need a valid (last_name) Last Name!"})
       }
-      else if(mobile_number.length !== 12 || mobile_number === "555-555-5555" ){
-        next({ status: 400, message: "Need a valid phone number!"})
+      else if(!mobile_number || mobile_number.length < 7 || mobile_number === "555-555-5555" ){
+        next({ status: 400, message: "Need a valid (mobile_number) phone number!"})
       }
+      else if(!reservation_date || regExp.test(reservation_date)){
+        next({ status: 400, message: "Reservation date (reservation_date) is missing!"})
+      }
+
       else if(Date.parse(reservation_date) < Date.now()){
-        next({ status: 400, message: "Reservation needs to be on a future date!"})
+        next({ status: 400, message: "Reservation (reservation_date) needs to be on a future date!"})
       }
       else if(new Date(reservation_date).getDay()+1 === 2){
-        next({ status: 400, message: "We are closed on Tuesdays! Pick a day when we are open."});
+        next({ status: 400, message: "We are closed on Tuesdays! Pick a day (reservation_date) when we are open."});
+      }
+      else if(!reservation_time || regExp.test(temp_reservation_time)){
+        next({ status: 400, message: "(reservation_time) is missing or not a time!"});
       }
       else if(temp_reservation_time < 1030){
-        next({ status: 400, message: "Reservation cannot be before business hours!"});
+        next({ status: 400, message: "Reservation (reservation_time) cannot be before business hours!"});
       }
       else if(temp_reservation_time > 2130){
-        next({ status: 400, message: "Reservation cannot be less than one hour before business closing!"});
+        next({ status: 400, message: "Reservation (reservation_time) cannot be less than one hour before business closing!"});
+      }
+      else if(!people || people < 1 || typeof people != "number"){
+        next({ status: 400, message: "Reservation needs people!"});
       }
       else{
         console.log("VALID RESERVATION");
@@ -44,7 +56,7 @@ async function isTimeTaken(req, res, next) {
 }
 async function create(req, res) {
   const data = await service.create(req.body.data);
-  res.status(204).json({ data })
+  res.status(201).json({ data })
 }
 async function list(req, res) {
     const reservation_date = req.query.date;

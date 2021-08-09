@@ -1,38 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router"
-import axios from "axios";
-import { next } from "../utils/date-time";
-import { formatNumber, validateReservation } from "../utils/reservationFormValidation"
+
+//import { today, next } from "../utils/date-time";
+//import { formatNumber } from "../utils/reservationFormValidation"
 import ErrorAlert  from "../layout/ErrorAlert";
 import { postReservation } from "../utils/api";
 
 
 
 export default function NewReservation ({date}) {
-    const didMount = useRef(false);
 
     const history = useHistory();
-    const today = new Date();
-    let time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
    const initialFormState = {
-       first_name: "first name",
-       last_name: "last name",
-       mobile_number: "555-555-5555",
+       first_name: "",
+       last_name: "",
+       mobile_number: "",
        reservation_date: date,
        reservation_time: "10:30",
        people: 1
    }
-   const [formData, setFormData] = useState({});
+   const [formData, setFormData] = useState(initialFormState);
    const [reservationsError, setReservationsError] = useState(null);
 
 
 
    const handleChange = ({ target }) => {
        let value = target.value;
-       if(target.name ==="mobile_number"){
-           value = formatNumber(value);
-       }
+    //    if(target.name ==="mobile_number"){
+    //        //value = formatNumber(value);
+    //    }
        if(target.name === "people"){
            if(value < 1)
                 value = 1;

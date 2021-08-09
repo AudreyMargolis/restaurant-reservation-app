@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useHistory } from "react-router"
 import ErrorAlert from "../layout/ErrorAlert";
 import Reservation from "../reservations/Reservation"
 import Tables from "../tables/Tables"
 import { today, previous, next } from "../utils/date-time";
+import {listReservations, listTables} from "../utils/api"
+import useQuery from "../utils/useQuery"
 
 /**
  * Defines the dashboard page.
@@ -11,9 +13,36 @@ import { today, previous, next } from "../utils/date-time";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date, reservations, setReservations, reservationsError, tables, setTables, tablesError }) {
- 
+function Dashboard() {
+  const [reservations, setReservations] = useState([]);
+  const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+  const query = useQuery();
+  const date = query.get("date") ? query.get("date") : today();
+
   const history = useHistory();
+  useEffect(loadDashboard, []);
+  useEffect(loadDashboard, [date]);
+
+  function loadDashboard() {
+    console.log("load dashboard called");
+    const abortController = new AbortController();
+    setReservationsError(null);
+    listReservations({ date }, abortController.signal)
+      .then(setReservations)
+      .catch(setReservationsError);
+    listTables(abortController.signal)
+      .then((pulledTables) => {
+        const updatedTables = pulledTables.map((table) => {
+          return { ...table };
+        });
+        return updatedTables;
+      })
+      .then(setTables)
+      .catch(setTablesError);
+    return () => abortController.abort();
+  }
   
   return (
     <main>
@@ -30,7 +59,7 @@ function Dashboard({ date, reservations, setReservations, reservationsError, tab
       <div>
         {reservations.map((res)=> <Reservation res={res} />)}
       </div>
-      <Tables tables={tables} setTables={setTables} setReservations={setReservations} tablesError = {tablesError} />
+      <Tables loadDashboard={loadDashboard} tables={tables} tablesError = {tablesError} />
     </main>
   );
 }

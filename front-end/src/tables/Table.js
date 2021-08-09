@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router"
-import ErrorAlert from "../layout/ErrorAlert";
+import React from "react";
 
 
 
 
-export default function Table({passedTable}) {
-const [table, setTable] = useState(passedTable);
 
 
+export default function Table({table, clearTable}) {
+
+
+  function handleClick() {
+      clearTable(table.table_id);
+  }
   return (
     <main>
       <h1>{table.table_name}</h1>
       <h3>Capacity: {table.capacity}</h3>
-      <h3>{table.reservation_id ? "Occupied" : "Open"}</h3>
+      <h3 data-table-id-status={table.table_id}>{table.reservation_id ? "Occupied"
+      : "Free"}</h3>
+      <h3>{table.reservation_id ? <button data-table-id-finish={table.table_id} onClick={handleClick}>Finish</button>
+      : ""}</h3>
       <div>
         {/* <button onClick={()=>delTable(table.table_id)}>Clear Table</button> */}
       </div>

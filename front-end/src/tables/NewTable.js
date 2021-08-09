@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router"
 import ErrorAlert  from "../layout/ErrorAlert";
 import { postTable } from "../utils/api";
 
 export default function NewTable () {
     const initialFormState = {
-        table_name: "unamed",
-        capacity: "1",
+        table_name: "",
+        capacity: "",
     }
     const [formData, setFormData] = useState({ ...initialFormState });
     const [tableError, setTableError] = useState(null);
@@ -45,7 +45,8 @@ export default function NewTable () {
                         type="text"
                         name="table_name"
                         onChange={handleChange}
-                        value={formData.table_name} />
+                        value={formData.table_name} 
+                        required />
                 </label>
                 <label htmlFor="capacity">
                     Enter Table's Capacity:
@@ -54,7 +55,8 @@ export default function NewTable () {
                         type="number"
                         name="capacity"
                         onChange={handleChange}
-                        value={formData.capacity} />
+                        value={formData.capacity} 
+                        required />
                 </label>
                 <button type="submit">Submit</button>
             </form>

@@ -2,8 +2,8 @@
  * Defines the base URL for the API.
  * The default values is overridden by the `API_BASE_URL` environment variable.
  */
-import {formatReservationDate, formatDate} from "./format-reservation-date";
-import {formatReservationTime, formatTime} from "./format-reservation-time";
+import {formatReservationDate} from "./format-reservation-date";
+import {formatReservationTime} from "./format-reservation-time";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
@@ -89,5 +89,9 @@ export async function deleteTable(reqBody, signal) {
   console.log("delete table called");
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { method: 'DELETE', headers, signal, body: JSON.stringify({data: reqBody})}, [])
+}
+export async function finishTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  return await fetch(url,{ method: "DELETE", headers, signal,},[]);
 }
 

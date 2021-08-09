@@ -1,9 +1,9 @@
 const knex = require("../db/connection");
+const reservationsService = require("../reservations/reservations.service")
 
 const tableName = "tables";
 
 function list() {
-    console.log("service table list called");
     return knex(tableName).select("*").orderBy("table_name", "asc");
 }
 
@@ -15,11 +15,6 @@ function create(table) {
 }
 
 function destroy(table_id) {
-    return knex(tableName)
-        .where({ table_id })
-        .del();
-}
-function removeReservation(table_id) {
     return knex(tableName)
         .where({ table_id })
         .del();
@@ -41,7 +36,6 @@ module.exports = {
     list,
     create,
     destroy,
-    removeReservation,
     read,
     update
 }
