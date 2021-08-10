@@ -89,9 +89,15 @@ async function create(req, res) {
   res.status(201).json({ data })
 }
 async function list(req, res) {
-    const reservation_date = req.query.date;
-    const data = await service.list(reservation_date);
+    const { date, mobile_number } = req.query;
+    if(date){
+    const data = await service.list(date);
     res.json({ data });
+    }
+    else{
+      const data = await service.search(mobile_number)
+      res.json({ data });
+    }   
 }
 async function reservationExists(req, res, next) {
 

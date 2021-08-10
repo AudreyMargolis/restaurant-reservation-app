@@ -94,4 +94,8 @@ export async function finishTable(table_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   return await fetch(url,{ method: "DELETE", headers, signal,},[]);
 }
+export async function listReservationsByPhoneNumber(mobile_number, signal) {
+  const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
+  return await fetchJson(url, { headers, signal }, []);
+}
 

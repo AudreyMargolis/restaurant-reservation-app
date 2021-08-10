@@ -28,10 +28,19 @@ function findByDateAndTime(reservation_date, reservation_time) {
 function read(reservation_id) {
     return knex(tableName).where({ reservation_id }).first();
 }
+function search(mobile_phone) {
+    return knex(tableName)
+      .whereRaw(
+        "translate(mobile_number, '() -', '') like ?",
+        `%${mobile_phone.replace(/\D/g, "")}%`
+      )
+      .orderBy("reservation_date");
+  }
 module.exports = {
     list,
     create,
     findByDateAndTime,
     update,
-    read
+    read,
+    search
 }
