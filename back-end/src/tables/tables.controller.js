@@ -42,7 +42,7 @@ async function validateTable(req, res, next) {
 async function create(req, res) {
     console.log("create called");
     const data = await service.create(req.body.data);
-    res.status(204).json({ data })
+    res.status(201).json({ data })
 }
 async function list(req, res) {
     const data = await service.list();
@@ -53,6 +53,9 @@ async function destroy(req, res) {
     const {data: { table_id } ={}} = req.body;
     const data = await service.destroy(table_id);
     res.status(200).json({ data })
+}
+async function checkForReservation(req, res, next) {
+ 
 }
 async function removeReservation(req, res) {
     const table = await {...res.locals.table,
@@ -74,6 +77,44 @@ async function isTableOccupied(req, res, next) {
     }
     next();
 }
+async function resExists(req, res, next) {
+    console.log("")
+    const resId = req.body.data.reservation_id;
+    if(!resId){
+        next({ status:400,
+            message: "reservation_id is missing"})
+    }
+    const reservation = await reservationsService.read(resId);
+    if(reservation){
+        res.locals.seatingreservation = reservation;
+        next();
+    }
+    else{
+        next({ status:404,
+        message: `reservation_id ${resId} doesn't exist`})
+    }
+}
+async function capacityCheck(req, res, next){
+    if(res.locals.table.capacity < res.locals.seatingreservation.people){
+        next({
+            status: 400,
+            message: "Table does not have sufficient capacity"
+        })
+    }
+    else
+        next();
+}
+async function validateDataSent(req, res, next) {
+    const data = req.body.data;
+  
+    if (!data || !data.reservation_id) {
+      return next({
+        status: 400,
+        message: `Data and reservation_id do not exist.`,
+      });
+    }
+    next();
+}
 async function update(req, res) {
 
     const updatedTable = await {
@@ -90,9 +131,9 @@ async function update(req, res) {
 }
 
 module.exports = {
-    list,
+    list: [asyncErrorBoundary(list)],
     create: [validateTable, asyncErrorBoundary(create)],
-    update: [asyncErrorBoundary(tableExists), isTableOccupied, asyncErrorBoundary(update)],
+    update: [asyncErrorBoundary(tableExists), validateDataSent, asyncErrorBoundary(resExists), capacityCheck, isTableOccupied, asyncErrorBoundary(update)],
     destroy,
     removeReservation: [asyncErrorBoundary(tableExists), asyncErrorBoundary(removeReservation)]
 }

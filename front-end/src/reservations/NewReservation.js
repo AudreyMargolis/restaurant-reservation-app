@@ -33,6 +33,7 @@ export default function NewReservation ({date}) {
        if(target.name === "people"){
            if(value < 1)
                 value = 1;
+        value = Number(value);
        }
        setFormData({
            ...formData,

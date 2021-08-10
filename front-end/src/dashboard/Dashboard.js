@@ -22,7 +22,6 @@ function Dashboard() {
   const date = query.get("date") ? query.get("date") : today();
 
   const history = useHistory();
-  useEffect(loadDashboard, []);
   useEffect(loadDashboard, [date]);
 
   function loadDashboard() {

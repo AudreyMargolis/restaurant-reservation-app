@@ -22,7 +22,6 @@ function validateReservation (req, res, next) {
       else if(!reservation_date || regExp.test(reservation_date)){
         next({ status: 400, message: "Reservation date (reservation_date) is missing!"})
       }
-
       else if(Date.parse(reservation_date) < Date.now()){
         next({ status: 400, message: "Reservation (reservation_date) needs to be on a future date!"})
       }
@@ -38,8 +37,11 @@ function validateReservation (req, res, next) {
       else if(temp_reservation_time > 2130){
         next({ status: 400, message: "Reservation (reservation_time) cannot be less than one hour before business closing!"});
       }
-      else if(!people || people < 1 || typeof people != "number"){
+      else if(!people || people < 1){
         next({ status: 400, message: "Reservation needs people!"});
+      }
+      else if(typeof req.body.data.people !== "number"){
+        next({ status: 400, message: "people needs to be a number!"});
       }
       else{
         console.log("VALID RESERVATION");
@@ -63,8 +65,33 @@ async function list(req, res) {
     const data = await service.list(reservation_date);
     res.json({ data });
 }
+async function reservationExists(req, res, next) {
+
+    const resId = req.params.reservation_id;
+    const reservation = await service.read(resId);
+
+    if (reservation) {
+        res.locals.reservation = reservation;
+        next();
+      } else {
+        next({
+          status: 404,
+          message: `Reservation: ${resId} is missing.`,
+        });
+    }
+
+}
+async function read(req, res) {
+  const data = res.locals.reservation;
+  res.status(200).json({ data });
+}
+async function update(req, res) {
+
+}
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [validateReservation, isTimeTaken, asyncErrorBoundary(create)],
+  create: [validateReservation, asyncErrorBoundary(create)],
+  read: [asyncErrorBoundary(reservationExists), read],
+  update: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(update)]
 };
