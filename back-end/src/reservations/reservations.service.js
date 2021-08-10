@@ -4,7 +4,8 @@ const tableName = "reservations";
 
 function list(reservation_date) {
     return knex(tableName).select("*")
-    .where({reservation_date}) 
+    .where({reservation_date})
+    .whereNot({status: "finished"})
     .orderBy("reservation_time", "asc");
 }
 

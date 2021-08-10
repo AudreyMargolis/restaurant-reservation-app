@@ -5,7 +5,7 @@ const service = require("./reservations.service");
  * List handler for reservation resources
  */
 function validateReservation (req, res, next) {
-  const {data: {first_name, last_name, mobile_number, reservation_date, reservation_time, people} ={}} = req.body;
+  const {data: {first_name, last_name, mobile_number, reservation_date, reservation_time, people, status} ={}} = req.body;
     
     let temp_reservation_time = reservation_time && reservation_time.replace(":","");
     let regExp = /[a-zA-Z]/g;
@@ -43,6 +43,9 @@ function validateReservation (req, res, next) {
       else if(typeof req.body.data.people !== "number"){
         next({ status: 400, message: "people needs to be a number!"});
       }
+      else if(status === "seated" || status === "finished"){
+        next({ status: 400, message: "Created reservation cannot be seated or finished"});
+      }
       else{
         console.log("VALID RESERVATION");
         next();
@@ -53,6 +56,31 @@ async function isTimeTaken(req, res, next) {
   const data = await service.findByDateAndTime(reservation_date, reservation_time);
   if(data.length)
     next({ status: 400, message: "Reservation already scheduled for this time!"});
+
+  next();
+}
+function updateValidation(req, res, next) {
+  const reqStatus = req.body.data.status;
+  const status = res.locals.reservation.status;
+  console.log(`UPDATEVALIDATIONCALLED reqstatus: ${reqStatus} localstatus: ${status}`)
+  if (
+    reqStatus !== "booked" &&
+    reqStatus !== "seated" &&
+    reqStatus !== "finished" &&
+    reqStatus !== "cancelled"
+  ) {
+    next({
+      status: 400,
+      message: "unknown status.",
+    });
+  }
+
+  if (status === "finished") {
+    next({
+      status: 400,
+      message: "a finished reservation cannot be updated.",
+    });
+  }
 
   next();
 }
@@ -86,12 +114,17 @@ async function read(req, res) {
   res.status(200).json({ data });
 }
 async function update(req, res) {
+  console.log(`UPDATECALLED`)
+  const reservation_id = req.params.reservation_id;
+  const status = req.body.data.status;
 
+  const updateStatus = await service.update(reservation_id, status);
+  res.status(200).json({ data: updateStatus });
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validateReservation, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), read],
-  update: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(update)]
+  update: [asyncErrorBoundary(reservationExists), updateValidation, asyncErrorBoundary(update)]
 };

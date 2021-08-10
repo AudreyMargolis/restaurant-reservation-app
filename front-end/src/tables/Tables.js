@@ -13,7 +13,7 @@ import Table from "./Table"
 export default function Tables({loadDashboard, tables, tablesError}) {
   const history = useHistory();
   function clearTable(table_id) {
-    const confirm = window.confirm("Is the party at this table finished?");
+    const confirm = window.confirm("Is this table ready to seat new guests?");
       if(confirm) {
         finishTable(table_id)
         .then(loadDashboard)
