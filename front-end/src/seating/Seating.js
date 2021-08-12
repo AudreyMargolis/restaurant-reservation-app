@@ -17,11 +17,9 @@ export default function Seating () {
         const abortController = new AbortController();
         listTables(abortController.signal)
           .then((pulledTables) => {
-            console.log("PULLED TABLES", pulledTables)
             const updatedTables = pulledTables.map((table) => {
               return { ...table };
             });
-            console.log("UT,", updatedTables);
             return updatedTables;
           })
           .then(setTables)
@@ -58,7 +56,7 @@ export default function Seating () {
                         >
                         <option key={0} value={0}>
                     --- Please select an option ---
-                </option> 
+                        </option> 
                         {tables.map((table, index) => {
                             console.log(`${table.table_name} - ${table.capacity}`);
                             return (
@@ -77,7 +75,7 @@ export default function Seating () {
                         Cancel
                         </button>
                     </div>
-            </form>
+                </form>
             </main>
         )}
 }

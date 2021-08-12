@@ -22,10 +22,11 @@ function Dashboard() {
   const date = query.get("date") ? query.get("date") : today();
 
   const history = useHistory();
+
+ 
   useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
-    console.log("load dashboard called");
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
@@ -42,6 +43,7 @@ function Dashboard() {
       .catch(setTablesError);
     return () => abortController.abort();
   }
+
   
   return (
     <main>
@@ -59,7 +61,7 @@ function Dashboard() {
       </div>
       <ErrorAlert error={reservationsError} />
       <div>
-        {reservations.map((res)=> <Reservation res={res} loadDashboard={loadDashboard} setReservationError={setReservationsError}/>)}
+        {reservations.map((res)=> <Reservation key={res.reservation_id} res={res} loadDashboard={loadDashboard} setReservationError={setReservationsError}/>)}
       </div>
       <Tables loadDashboard={loadDashboard} tables={tables} tablesError = {tablesError} />
     </main>

@@ -9,7 +9,7 @@ function validateReservation (req, res, next) {
     
     let temp_reservation_time = reservation_time && reservation_time.replace(":","");
     let regExp = /[a-zA-Z]/g;
-      console.log("Reservation Time", temp_reservation_time);
+     
       if(!first_name || first_name === "first name" || first_name === "" || first_name.includes(" ")){
         next({ status: 400, message: "Need a valid (first_name) First Name!"})
       }
@@ -47,7 +47,6 @@ function validateReservation (req, res, next) {
         next({ status: 400, message: "Created reservation cannot be seated or finished"});
       }
       else{
-        console.log("VALID RESERVATION");
         next();
       }
 }
@@ -62,7 +61,7 @@ async function isTimeTaken(req, res, next) {
 function updateValidation(req, res, next) {
   const reqStatus = req.body.data.status;
   const status = res.locals.reservation.status;
-  console.log(`UPDATEVALIDATIONCALLED reqstatus: ${reqStatus} localstatus: ${status}`)
+
   if (
     reqStatus !== "booked" &&
     reqStatus !== "seated" &&
@@ -120,7 +119,7 @@ async function read(req, res) {
   res.status(200).json({ data });
 }
 async function update(req, res) {
-  console.log(`UPDATECALLED`)
+  
   const reservation_id = req.params.reservation_id;
   const status = req.body.data.status;
 

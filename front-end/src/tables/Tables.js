@@ -29,7 +29,7 @@ export default function Tables({loadDashboard, tables, tablesError}) {
         <button onClick={()=>history.push("/tables/new")}>New Table</button>
       </div>
       <div>
-        {tables.map((table)=> <Table table={table} clearTable={clearTable}/>)}
+        {tables.map((table)=> <Table key={table.table_id} table={table} clearTable={clearTable}/>)}
       </div>
     </main>
   );

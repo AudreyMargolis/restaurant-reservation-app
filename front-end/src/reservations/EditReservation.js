@@ -43,9 +43,6 @@ export default function EditReservation() {
        }
        const handleChange = ({ target }) => {
         let value = target.value;
-     //    if(target.name ==="mobile_number"){
-     //        //value = formatNumber(value);
-     //    }
         if(target.name === "people"){
             if(value < 1)
                  value = 1;

@@ -25,7 +25,6 @@ export default function NewTable () {
     };
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("submit called");
         postTable(formData).then(response => {
                         history.push(`/dashboard`)
                     }).catch((error)=>{

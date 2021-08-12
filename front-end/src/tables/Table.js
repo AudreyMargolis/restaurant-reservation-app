@@ -12,7 +12,7 @@ export default function Table({table, clearTable}) {
       clearTable(table.table_id);
   }
   return (
-    <div className="card mx-1 my-2" key={table.table_id}>
+    <div className="card mx-1 my-2" >
       <div className="card-body bg-secondary text-light">
         <h4 className="card-title">{table.table_name}</h4>
         <p className="card-text">Capacity: {table.capacity}</p>

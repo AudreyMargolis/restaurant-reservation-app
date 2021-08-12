@@ -40,13 +40,11 @@ async function validateTable(req, res, next) {
     next();
 }
 async function create(req, res) {
-    console.log("create called");
     const data = await service.create(req.body.data);
     res.status(201).json({ data })
 }
 async function list(req, res) {
     const data = await service.list();
-    console.log("DATA IN CONTROLLER", data);
     res.json({ data });
 }
 async function destroy(req, res) {
@@ -90,7 +88,6 @@ async function isTableAlreadyOccupied(req, res, next) {
     next();
 }
 async function resExists(req, res, next) {
-    console.log("")
     const resId = req.body.data.reservation_id;
     if(!resId){
         next({ status:400,

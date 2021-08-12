@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom"
 import { listReservationsByPhoneNumber } from "../utils/api";
 import Reservation from "../reservations/Reservation";
+import ErrorAlert from "../layout/ErrorAlert"
 
 export default function Search() {
   const [list, setList] = useState([]);
@@ -21,6 +21,7 @@ export default function Search() {
   }
   return (
     <div>
+      <ErrorAlert error={error} />
       <h2 className="mt-3 ml-3">Search</h2>
       <form name="reservation" onSubmit={handleSearch}>
         <input
