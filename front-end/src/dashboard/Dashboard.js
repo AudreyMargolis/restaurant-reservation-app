@@ -50,13 +50,16 @@ function Dashboard() {
       </div>
 
       <div>
-        <button onClick={()=> history.push(`/dashboard?date=${previous(date)}`)}>Previous Date</button>
-        <button onClick={()=> history.push(`/dashboard?date=${today()}`)}>Today</button>
-        <button onClick={()=> history.push(`/dashboard?date=${next(date)}`)}>Next Date</button>
+        <button className="btn btn-info m-1 p-3"
+        onClick={()=> history.push(`/dashboard?date=${previous(date)}`)}>Previous Date</button>
+        <button className="btn btn-info m-1 p-3"
+        onClick={()=> history.push(`/dashboard?date=${today()}`)}>Today</button>
+        <button className="btn btn-info m-1 p-3"
+        onClick={()=> history.push(`/dashboard?date=${next(date)}`)}>Next Date</button>
       </div>
       <ErrorAlert error={reservationsError} />
       <div>
-        {reservations.map((res)=> <Reservation res={res} />)}
+        {reservations.map((res)=> <Reservation res={res} loadDashboard={loadDashboard} setReservationError={setReservationsError}/>)}
       </div>
       <Tables loadDashboard={loadDashboard} tables={tables} tablesError = {tablesError} />
     </main>

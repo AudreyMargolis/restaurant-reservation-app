@@ -6,6 +6,7 @@ function list(reservation_date) {
     return knex(tableName).select("*")
     .where({reservation_date})
     .whereNot({status: "finished"})
+    .whereNot({status: "cancelled"})
     .orderBy("reservation_time", "asc");
 }
 
@@ -22,6 +23,12 @@ function update(reservation_id, status) {
       .returning("*")
       .then((createdRecords) => createdRecords[0]);
   }
+function editReservation(reservation) {
+    return knex(tableName)
+    .select("*")
+    .where({ reservation_id: reservation.reservation_id })
+    .update(reservation, "*")
+}
 function findByDateAndTime(reservation_date, reservation_time) {
     return knex(tableName).select("*").where({reservation_date}).where({reservation_time}).whereNot({"status": "finished"})
 }
@@ -42,5 +49,6 @@ module.exports = {
     findByDateAndTime,
     update,
     read,
-    search
+    search,
+    editReservation
 }

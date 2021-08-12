@@ -3,6 +3,7 @@ const controller = require("./reservations.controller");
 
 router.route("/:reservation_id")
 .get(controller.read)
+.put(controller.editReservation)
 
 router
   .route("/:reservation_id/status")

@@ -98,4 +98,27 @@ export async function listReservationsByPhoneNumber(mobile_number, signal) {
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
   return await fetchJson(url, { headers, signal }, []);
 }
+export async function readReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  return await fetchJson(url, { headers, signal }, []);
+}
+export async function editReservation(reservation, reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  return await fetchJson(url,{method: "PUT", headers, body: JSON.stringify({ data: reservation }),signal},
+    []
+  );
+}
+export async function updateReservationStatus(reservation_id, status, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  return await fetchJson(
+    url,
+    {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({ data: {status} }),
+      signal,
+    },
+    []
+  );
+}
 
